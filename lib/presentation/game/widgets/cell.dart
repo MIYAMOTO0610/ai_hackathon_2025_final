@@ -1,18 +1,17 @@
-﻿import 'package:ai_hackathon_2025_final/presentation/game/widgets/canvas.dart';
+﻿import 'dart:typed_data';
+
 import 'package:flutter/material.dart' hide Canvas;
 
 class Cell extends StatelessWidget {
-  const Cell({super.key});
+  const Cell({super.key, this.image, required this.onTap});
 
-  void onTap(BuildContext context) {
-    // 手書き入力画面
-    showDialog(context: context, builder: (context) => Canvas());
-  }
+  final Uint8List? image;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => onTap(context),
+      onTap: () => onTap(),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -20,6 +19,7 @@ class Cell extends StatelessWidget {
         ),
         width: 100,
         height: 100,
+        child: image != null ? Image.memory(image!) : null,
       ),
     );
   }

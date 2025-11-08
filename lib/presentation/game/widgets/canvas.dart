@@ -3,11 +3,11 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
 
 class Canvas extends StatefulWidget {
-  const Canvas({super.key});
+  const Canvas({super.key, required this.onCanvasExported});
+
+  final void Function(Uint8List) onCanvasExported;
 
   @override
   State<Canvas> createState() => _CanvasState();
@@ -16,8 +16,6 @@ class Canvas extends StatefulWidget {
 class _CanvasState extends State<Canvas> {
   final GlobalKey _repaintKey = GlobalKey();
   final List<Offset?> _points = [];
-
-  Uint8List? _imageBytes;
 
   void _onPanStart(DragStartDetails details) {
     final box = _repaintKey.currentContext!.findRenderObject() as RenderBox;
@@ -42,6 +40,12 @@ class _CanvasState extends State<Canvas> {
     });
   }
 
+  void _clear() {
+    setState(() {
+      _points.clear();
+    });
+  }
+
   Future<void> _exportAsImage() async {
     try {
       final boundary =
@@ -56,26 +60,13 @@ class _CanvasState extends State<Canvas> {
 
       final pngBytes = byteData.buffer.asUint8List();
 
-      setState(() {
-        _imageBytes = pngBytes;
-      });
+      widget.onCanvasExported(pngBytes);
 
-      final dir = await getApplicationDocumentsDirectory();
-      final file = File(
-        '${dir.path}/kanji_${DateTime.now().millisecondsSinceEpoch}.png',
-      );
-      await file.writeAsBytes(pngBytes);
-      debugPrint('Saved to: ${file.path}');
+      if (context.mounted) Navigator.of(context).pop();
     } catch (e, s) {
       debugPrint('export error: $e\n$s');
+      if (context.mounted) Navigator.of(context).pop();
     }
-  }
-
-  void _clear() {
-    setState(() {
-      _points.clear();
-      _imageBytes = null;
-    });
   }
 
   @override
@@ -111,16 +102,6 @@ class _CanvasState extends State<Canvas> {
             FilledButton(onPressed: _exportAsImage, child: const Text('画像にする')),
           ],
         ),
-        const SizedBox(height: 16),
-        if (_imageBytes != null) ...[
-          const Text('生成された画像プレビュー'),
-          const SizedBox(height: 8),
-          SizedBox(
-            width: 150,
-            height: 150,
-            child: Image.memory(_imageBytes!, fit: BoxFit.contain),
-          ),
-        ],
       ],
     );
   }
