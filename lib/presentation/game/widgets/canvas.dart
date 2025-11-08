@@ -17,6 +17,8 @@ class Canvas extends StatefulWidget {
 }
 
 class _CanvasState extends State<Canvas> {
+  bool _isLoading = false;
+
   final GlobalKey _repaintKey = GlobalKey();
   final List<Offset?> _points = [];
 
@@ -51,6 +53,7 @@ class _CanvasState extends State<Canvas> {
   }
 
   Future<void> _exportAsImage() async {
+    setState(() => _isLoading = true);
     try {
       final boundary =
           _repaintKey.currentContext!.findRenderObject()
@@ -65,16 +68,17 @@ class _CanvasState extends State<Canvas> {
       final pngBytes = byteData.buffer.asUint8List();
 
       // TODO: 消す
-      widget.onCanvasExported(
-        Cell(image: pngBytes, kanji: 'test', strokeCount: 3),
-      );
-      Navigator.of(context).pop();
-      return;
+      // widget.onCanvasExported(
+      //   Cell(image: pngBytes, kanji: 'test', strokeCount: 3),
+      // );
+      // Navigator.of(context).pop();
+      // return;
 
       String kanji = '';
       int strokeCount = 0;
       try {
         kanji = await KanjiOcrService().recognizeKanji(pngBytes);
+        print('kanji: $kanji');
       } catch (e) {
         debugPrint('kanji ocr error: $e');
         Navigator.of(context).pop();
@@ -83,6 +87,7 @@ class _CanvasState extends State<Canvas> {
 
       try {
         strokeCount = await KanjiStrokeService().fetchStrokeCount(kanji);
+        print('strokeCount: $strokeCount');
       } catch (e) {
         debugPrint('kanji stroke count error: $e');
         Navigator.of(context).pop();
@@ -93,6 +98,7 @@ class _CanvasState extends State<Canvas> {
         Cell(image: pngBytes, kanji: kanji, strokeCount: strokeCount),
       );
 
+      setState(() => _isLoading = false);
       if (context.mounted) Navigator.of(context).pop();
     } catch (e, s) {
       debugPrint('export error: $e\n$s');
@@ -112,53 +118,60 @@ class _CanvasState extends State<Canvas> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Image.asset('assets/images/canvas_1.png', width: 299),
-              const SizedBox(height: 64),
-              RepaintBoundary(
-                key: _repaintKey,
-                child: Container(
-                  width: 300,
-                  height: 300,
-                  decoration: BoxDecoration(
-                    color: kCellColor,
-                    border: Border.all(color: Color(0xFFDF9427), width: 4),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: GestureDetector(
-                    onPanStart: _onPanStart,
-                    onPanUpdate: _onPanUpdate,
-                    onPanEnd: _onPanEnd,
-                    child: CustomPaint(painter: _KanjiPainter(points: _points)),
-                  ),
+          child: _isLoading
+              ? const CircularProgressIndicator()
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset('assets/images/canvas_1.png', width: 299),
+                    const SizedBox(height: 64),
+                    RepaintBoundary(
+                      key: _repaintKey,
+                      child: Container(
+                        width: 300,
+                        height: 300,
+                        decoration: BoxDecoration(
+                          color: kCellColor,
+                          border: Border.all(
+                            color: Color(0xFFDF9427),
+                            width: 4,
+                          ),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: GestureDetector(
+                          onPanStart: _onPanStart,
+                          onPanUpdate: _onPanUpdate,
+                          onPanEnd: _onPanEnd,
+                          child: CustomPaint(
+                            painter: _KanjiPainter(points: _points),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 64),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: _cancel,
+                          child: Image.asset(
+                            'assets/images/canvas_cancel.png',
+                            width: 144,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        GestureDetector(
+                          onTap: _exportAsImage,
+                          child: Image.asset(
+                            'assets/images/canvas_ok.png',
+                            width: 184,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 64),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: _cancel,
-                    child: Image.asset(
-                      'assets/images/canvas_cancel.png',
-                      width: 144,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  GestureDetector(
-                    onTap: _exportAsImage,
-                    child: Image.asset(
-                      'assets/images/canvas_ok.png',
-                      width: 184,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
         ),
       ),
     );

@@ -16,22 +16,27 @@ class CellWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bgColor = isWinning ? Colors.red : kCellColor;
+    final bgColor = isWinning ? Color(0xFFFFD0A8) : kCellColor;
     return GestureDetector(
       onTap: () => onTap(),
       child: Padding(
         padding: const EdgeInsets.all(2.0),
         child: Container(
+          alignment: Alignment.center,
           decoration: BoxDecoration(
             color: bgColor,
             borderRadius: BorderRadius.circular(8),
           ),
           width: 100,
           height: 100,
-          child: cell.image != null
-              ? ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.memory(cell.image!, fit: BoxFit.cover),
+          child: cell.kanji != null
+              ? Text(
+                  cell.kanji!,
+                  style: const TextStyle(
+                    fontFamily: 'Kanata-Tegaki',
+                    fontSize: 64,
+                    color: Color(0xFFA86300),
+                  ),
                 )
               : null,
         ),

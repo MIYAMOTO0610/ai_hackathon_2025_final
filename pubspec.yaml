@@ -29,3 +29,8 @@ flutter:
   assets:
     - assets/images/
     - .env
+
+  fonts:
+    - family: Kanata-Tegaki
+      fonts:
+        - asset: assets/fonts/Kanata-Tegaki.otf
