@@ -48,7 +48,7 @@ class _GridState extends State<Grid> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(32),
+      padding: const EdgeInsets.all(16),
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -71,6 +71,8 @@ class _GridState extends State<Grid> {
             borderRadius: BorderRadius.circular(10),
           ),
           child: GridView.builder(
+            padding: EdgeInsets.zero,
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: kRow * kColumn,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

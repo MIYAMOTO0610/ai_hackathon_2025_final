@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 /// kanjiapi.dev を利用して漢字の画数を取得するクライアント。
 class KanjiStrokeService {
   KanjiStrokeService({http.Client? httpClient})
-      : _httpClient = httpClient ?? http.Client();
+    : _httpClient = httpClient ?? http.Client();
 
   final http.Client _httpClient;
 
