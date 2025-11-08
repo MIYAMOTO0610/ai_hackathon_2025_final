@@ -118,60 +118,73 @@ class _CanvasState extends State<Canvas> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Center(
-          child: _isLoading
-              ? const CircularProgressIndicator()
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Image.asset('assets/images/canvas_1.png', width: 299),
-                    const SizedBox(height: 64),
-                    RepaintBoundary(
-                      key: _repaintKey,
-                      child: Container(
-                        width: 300,
-                        height: 300,
-                        decoration: BoxDecoration(
-                          color: kCellColor,
-                          border: Border.all(
-                            color: Color(0xFFDF9427),
-                            width: 4,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(
+                _isLoading
+                    ? 'assets/images/canvas_loading.png'
+                    : 'assets/images/canvas_1.png',
+                width: 299,
+              ),
+              const SizedBox(height: 64),
+              AbsorbPointer(
+                absorbing: _isLoading,
+                child: Opacity(
+                  opacity: _isLoading ? 0.5 : 1.0,
+                  child: Column(
+                    children: [
+                      RepaintBoundary(
+                        key: _repaintKey,
+                        child: Container(
+                          width: 300,
+                          height: 300,
+                          decoration: BoxDecoration(
+                            color: kCellColor,
+                            border: Border.all(
+                              color: Color(0xFFDF9427),
+                              width: 4,
+                            ),
+                            borderRadius: BorderRadius.circular(16),
                           ),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: GestureDetector(
-                          onPanStart: _onPanStart,
-                          onPanUpdate: _onPanUpdate,
-                          onPanEnd: _onPanEnd,
-                          child: CustomPaint(
-                            painter: _KanjiPainter(points: _points),
+                          child: GestureDetector(
+                            onPanStart: _onPanStart,
+                            onPanUpdate: _onPanUpdate,
+                            onPanEnd: _onPanEnd,
+                            child: CustomPaint(
+                              painter: _KanjiPainter(points: _points),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 64),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                          onTap: _cancel,
-                          child: Image.asset(
-                            'assets/images/canvas_cancel.png',
-                            width: 144,
+                      const SizedBox(height: 64),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: _cancel,
+                            child: Image.asset(
+                              'assets/images/canvas_cancel.png',
+                              width: 144,
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 16),
-                        GestureDetector(
-                          onTap: _exportAsImage,
-                          child: Image.asset(
-                            'assets/images/canvas_ok.png',
-                            width: 184,
+                          const SizedBox(width: 16),
+                          GestureDetector(
+                            onTap: _exportAsImage,
+                            child: Image.asset(
+                              'assets/images/canvas_ok.png',
+                              width: 184,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
+              ),
+            ],
+          ),
         ),
       ),
     );
