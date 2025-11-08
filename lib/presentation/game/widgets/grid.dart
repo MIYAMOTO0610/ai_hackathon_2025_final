@@ -1,5 +1,5 @@
 ﻿import 'package:ai_hackathon_2025_final/common/constants.dart';
-import 'package:ai_hackathon_2025_final/presentation/game/cell.dart';
+import 'package:ai_hackathon_2025_final/presentation/game/widgets/cell.dart';
 import 'package:flutter/material.dart';
 
 class Grid extends StatelessWidget {
