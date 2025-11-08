@@ -3,20 +3,27 @@ import 'package:ai_hackathon_2025_final/domain/cell.dart';
 import 'package:flutter/material.dart' hide Canvas;
 
 class CellWidget extends StatelessWidget {
-  const CellWidget({super.key, required this.cell, required this.onTap});
+  const CellWidget({
+    super.key,
+    required this.cell,
+    required this.onTap,
+    this.isWinning = false,
+  });
 
   final Cell cell;
   final VoidCallback onTap;
+  final bool isWinning;
 
   @override
   Widget build(BuildContext context) {
+    final bgColor = isWinning ? Colors.red : kCellColor;
     return GestureDetector(
       onTap: () => onTap(),
       child: Padding(
         padding: const EdgeInsets.all(2.0),
         child: Container(
           decoration: BoxDecoration(
-            color: kCellColor,
+            color: bgColor,
             borderRadius: BorderRadius.circular(8),
           ),
           width: 100,

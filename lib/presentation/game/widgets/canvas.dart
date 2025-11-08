@@ -1,14 +1,16 @@
-﻿import 'dart:typed_data';
-import 'dart:ui' as ui;
+﻿import 'dart:ui' as ui;
 
 import 'package:ai_hackathon_2025_final/common/constants.dart';
+import 'package:ai_hackathon_2025_final/domain/cell.dart';
+import 'package:ai_hackathon_2025_final/services/kanji_ocr_service.dart';
+import 'package:ai_hackathon_2025_final/services/kanji_stroke_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 class Canvas extends StatefulWidget {
   const Canvas({super.key, required this.onCanvasExported});
 
-  final void Function(Uint8List) onCanvasExported;
+  final void Function(Cell) onCanvasExported;
 
   @override
   State<Canvas> createState() => _CanvasState();
@@ -62,7 +64,34 @@ class _CanvasState extends State<Canvas> {
 
       final pngBytes = byteData.buffer.asUint8List();
 
-      widget.onCanvasExported(pngBytes);
+      // TODO: 消す
+      widget.onCanvasExported(
+        Cell(image: pngBytes, kanji: 'test', strokeCount: 3),
+      );
+      Navigator.of(context).pop();
+      return;
+
+      String kanji = '';
+      int strokeCount = 0;
+      try {
+        kanji = await KanjiOcrService().recognizeKanji(pngBytes);
+      } catch (e) {
+        debugPrint('kanji ocr error: $e');
+        Navigator.of(context).pop();
+        return;
+      }
+
+      try {
+        strokeCount = await KanjiStrokeService().fetchStrokeCount(kanji);
+      } catch (e) {
+        debugPrint('kanji stroke count error: $e');
+        Navigator.of(context).pop();
+        return;
+      }
+
+      widget.onCanvasExported(
+        Cell(image: pngBytes, kanji: kanji, strokeCount: strokeCount),
+      );
 
       if (context.mounted) Navigator.of(context).pop();
     } catch (e, s) {
