@@ -65,7 +65,7 @@ class _GridState extends State<Grid> {
             color: Color(0xFFDF9427),
             border: Border.all(
               color: Color(0xFFDF9427),
-              width: 2,
+              width: 4,
               strokeAlign: BorderSide.strokeAlignOutside,
             ),
             borderRadius: BorderRadius.circular(10),

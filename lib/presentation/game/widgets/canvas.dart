@@ -1,6 +1,7 @@
 ﻿import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:ai_hackathon_2025_final/common/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -40,10 +41,11 @@ class _CanvasState extends State<Canvas> {
     });
   }
 
-  void _clear() {
+  void _cancel() {
     setState(() {
       _points.clear();
     });
+    if (context.mounted) Navigator.of(context).pop();
   }
 
   Future<void> _exportAsImage() async {
@@ -71,38 +73,65 @@ class _CanvasState extends State<Canvas> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const SizedBox(height: 8),
-        // 手書きキャンバス
-        Center(
-          child: RepaintBoundary(
-            key: _repaintKey,
-            child: Container(
-              width: 300,
-              height: 300,
-              color: Colors.white,
-              child: GestureDetector(
-                onPanStart: _onPanStart,
-                onPanUpdate: _onPanUpdate,
-                onPanEnd: _onPanEnd,
-                child: CustomPaint(painter: _KanjiPainter(points: _points)),
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/images/background.png'),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset('assets/images/canvas_1.png', width: 299),
+              const SizedBox(height: 64),
+              RepaintBoundary(
+                key: _repaintKey,
+                child: Container(
+                  width: 300,
+                  height: 300,
+                  decoration: BoxDecoration(
+                    color: kCellColor,
+                    border: Border.all(color: Color(0xFFDF9427), width: 4),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: GestureDetector(
+                    onPanStart: _onPanStart,
+                    onPanUpdate: _onPanUpdate,
+                    onPanEnd: _onPanEnd,
+                    child: CustomPaint(painter: _KanjiPainter(points: _points)),
+                  ),
+                ),
               ),
-            ),
+              const SizedBox(height: 64),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: _cancel,
+                    child: Image.asset(
+                      'assets/images/canvas_cancel.png',
+                      width: 144,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  GestureDetector(
+                    onTap: _exportAsImage,
+                    child: Image.asset(
+                      'assets/images/canvas_ok.png',
+                      width: 184,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
-        const SizedBox(height: 16),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            FilledButton(onPressed: _clear, child: const Text('クリア')),
-            const SizedBox(width: 16),
-            FilledButton(onPressed: _exportAsImage, child: const Text('画像にする')),
-          ],
-        ),
-      ],
+      ),
     );
   }
 }

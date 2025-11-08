@@ -1,5 +1,6 @@
 ﻿import 'dart:typed_data';
 
+import 'package:ai_hackathon_2025_final/common/constants.dart';
 import 'package:flutter/material.dart' hide Canvas;
 
 class Cell extends StatelessWidget {
@@ -16,7 +17,7 @@ class Cell extends StatelessWidget {
         padding: const EdgeInsets.all(2.0),
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: kCellColor,
             borderRadius: BorderRadius.circular(8),
           ),
           width: 100,
