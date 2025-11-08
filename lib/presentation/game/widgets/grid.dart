@@ -1,6 +1,5 @@
 ﻿import 'package:ai_hackathon_2025_final/common/constants.dart';
 import 'package:ai_hackathon_2025_final/domain/cell.dart';
-import 'package:ai_hackathon_2025_final/presentation/game/widgets/canvas.dart';
 import 'package:ai_hackathon_2025_final/presentation/game/widgets/cell_widget.dart';
 import 'package:flutter/material.dart' hide Canvas;
 

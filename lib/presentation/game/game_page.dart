@@ -41,35 +41,40 @@ class _GamePageState extends State<GamePage> {
     });
   }
 
-  // 判定ロジック
-  // 揃ったときindexのリスト, 揃っていないときから配列を返す
+  // 3マスすべて埋まっていれば合計を返し、
+  // 1マスでも未入力(null)があれば null を返す
+  int? _sumIfAllFilled(List<int> indices) {
+    int sum = 0;
+
+    for (final idx in indices) {
+      final value = _cells[idx].strokeCount;
+      if (value == null) {
+        return null; // 1つでも未入力なら「揃ってない」
+      }
+      sum += value;
+    }
+
+    return sum;
+  }
+
   List<int> _checkWin(int lastIndex) {
     final row = lastIndex ~/ kColumn;
     final col = lastIndex % kColumn;
 
     // 行
     final rowIndices = List<int>.generate(kColumn, (i) => row * kColumn + i);
-    final sumRow = rowIndices.fold(
-      0,
-      (sum, idx) => sum + (_cells[idx].strokeCount ?? 0),
-    );
+    final sumRow = _sumIfAllFilled(rowIndices);
     if (sumRow == 9) return rowIndices;
 
     // 列
     final colIndices = List<int>.generate(kRow, (i) => i * kColumn + col);
-    final sumCol = colIndices.fold(
-      0,
-      (sum, idx) => sum + (_cells[idx].strokeCount ?? 0),
-    );
+    final sumCol = _sumIfAllFilled(colIndices);
     if (sumCol == 9) return colIndices;
 
     // 左上→右下 の対角線
     if (row == col) {
       final mainDiagIndices = List<int>.generate(kRow, (i) => i * kColumn + i);
-      final sumMainDiag = mainDiagIndices.fold(
-        0,
-        (sum, idx) => sum + (_cells[idx].strokeCount ?? 0),
-      );
+      final sumMainDiag = _sumIfAllFilled(mainDiagIndices);
       if (sumMainDiag == 9) return mainDiagIndices;
     }
 
@@ -79,10 +84,7 @@ class _GamePageState extends State<GamePage> {
         kRow,
         (i) => i * kColumn + (kColumn - 1 - i),
       );
-      final sumSubDiag = subDiagIndices.fold(
-        0,
-        (sum, idx) => sum + (_cells[idx].strokeCount ?? 0),
-      );
+      final sumSubDiag = _sumIfAllFilled(subDiagIndices);
       if (sumSubDiag == 9) return subDiagIndices;
     }
 
