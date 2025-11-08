@@ -1,8 +1,9 @@
 ﻿import 'dart:typed_data';
 
 import 'package:ai_hackathon_2025_final/common/constants.dart';
+import 'package:ai_hackathon_2025_final/domain/cell.dart';
 import 'package:ai_hackathon_2025_final/presentation/game/widgets/canvas.dart';
-import 'package:ai_hackathon_2025_final/presentation/game/widgets/cell.dart';
+import 'package:ai_hackathon_2025_final/presentation/game/widgets/cell_widget.dart';
 import 'package:flutter/material.dart' hide Canvas;
 
 class Grid extends StatefulWidget {
@@ -13,7 +14,7 @@ class Grid extends StatefulWidget {
 }
 
 class _GridState extends State<Grid> {
-  final _images = List<Uint8List?>.filled(kRow * kColumn, null);
+  final _cells = List<Cell>.filled(kRow * kColumn, Cell());
 
   int? _currentIndex;
 
@@ -31,15 +32,15 @@ class _GridState extends State<Grid> {
   void _onCanvasExported(Uint8List bytes) {
     if (_currentIndex == null) return;
     setState(() {
-      _images[_currentIndex!] = bytes;
+      _cells[_currentIndex!] = Cell(image: bytes);
     });
   }
 
   // TODO: ゲーム終了時に全部
   void _onGameEnd() {
     setState(() {
-      for (var i = 0; i < _images.length; i++) {
-        _images[i] = null;
+      for (var i = 0; i < _cells.length; i++) {
+        _cells[i] = Cell();
       }
       _currentIndex = null;
     });
@@ -79,7 +80,7 @@ class _GridState extends State<Grid> {
               crossAxisCount: kColumn,
             ),
             itemBuilder: (context, index) =>
-                Cell(image: _images[index], onTap: () => _onCellTap(index)),
+                CellWidget(cell: _cells[index], onTap: () => _onCellTap(index)),
           ),
         ),
       ),

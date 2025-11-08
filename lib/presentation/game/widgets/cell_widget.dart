@@ -1,12 +1,11 @@
-﻿import 'dart:typed_data';
-
-import 'package:ai_hackathon_2025_final/common/constants.dart';
+﻿import 'package:ai_hackathon_2025_final/common/constants.dart';
+import 'package:ai_hackathon_2025_final/domain/cell.dart';
 import 'package:flutter/material.dart' hide Canvas;
 
-class Cell extends StatelessWidget {
-  const Cell({super.key, this.image, required this.onTap});
+class CellWidget extends StatelessWidget {
+  const CellWidget({super.key, required this.cell, required this.onTap});
 
-  final Uint8List? image;
+  final Cell cell;
   final VoidCallback onTap;
 
   @override
@@ -22,10 +21,10 @@ class Cell extends StatelessWidget {
           ),
           width: 100,
           height: 100,
-          child: image != null
+          child: cell.image != null
               ? ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: Image.memory(image!, fit: BoxFit.cover),
+                  child: Image.memory(cell.image!, fit: BoxFit.cover),
                 )
               : null,
         ),
