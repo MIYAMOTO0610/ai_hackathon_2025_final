@@ -8,15 +8,18 @@ class CellWidget extends StatelessWidget {
     required this.cell,
     required this.onTap,
     this.isWinning = false,
+    this.textColor = const Color(0xFFA86300),
   });
 
   final Cell cell;
   final VoidCallback onTap;
   final bool isWinning;
+  final Color textColor;
 
   @override
   Widget build(BuildContext context) {
     final bgColor = isWinning ? Color(0xFFFFD0A8) : kCellColor;
+
     return GestureDetector(
       onTap: () => onTap(),
       child: Padding(
@@ -32,10 +35,10 @@ class CellWidget extends StatelessWidget {
           child: cell.kanji != null
               ? Text(
                   cell.kanji!,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Kanata-Tegaki',
                     fontSize: 64,
-                    color: Color(0xFFA86300),
+                    color: textColor,
                   ),
                 )
               : null,

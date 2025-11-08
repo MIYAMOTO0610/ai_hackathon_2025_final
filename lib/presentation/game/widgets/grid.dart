@@ -3,6 +3,18 @@ import 'package:ai_hackathon_2025_final/domain/cell.dart';
 import 'package:ai_hackathon_2025_final/presentation/game/widgets/cell_widget.dart';
 import 'package:flutter/material.dart' hide Canvas;
 
+final textColors = [
+  Color(0xFF259AD5),
+  Color(0xFF2AB054),
+  Color(0xFF5B8900),
+  Color(0xFF6C5248),
+  Color(0xFFAB60E1),
+  Color(0xFFD4B800),
+  Color(0xFFE7782D),
+  Color(0xFFE96430),
+  Color(0xFFF0599D),
+];
+
 class Grid extends StatefulWidget {
   const Grid({
     super.key,
@@ -57,6 +69,7 @@ class _GridState extends State<Grid> {
               cell: widget.cells[index],
               onTap: () => widget.onCellTap(index),
               isWinning: widget.winningIndices.contains(index),
+              textColor: textColors[index],
             ),
           ),
         ),
