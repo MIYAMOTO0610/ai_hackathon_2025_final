@@ -6,8 +6,19 @@ class GamePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(body: Center(child: Grid())),
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/images/background.png'),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Center(child: Grid()),
+        ),
+      ),
     );
   }
 }
