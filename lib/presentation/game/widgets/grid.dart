@@ -47,18 +47,39 @@ class _GridState extends State<Grid> {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black, width: 3),
-      ),
-      child: GridView.builder(
-        shrinkWrap: true,
-        itemCount: kRow * kColumn,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: kColumn,
+    return Padding(
+      padding: const EdgeInsets.all(32),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Color(0xFFFFD86D),
+          border: Border.all(
+            color: Color(0xFFDF9427),
+            width: 4,
+            strokeAlign: BorderSide.strokeAlignOutside,
+          ),
+          borderRadius: BorderRadius.circular(12),
         ),
-        itemBuilder: (context, index) =>
-            Cell(image: _images[index], onTap: () => _onCellTap(index)),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: Color(0xFFDF9427),
+            border: Border.all(
+              color: Color(0xFFDF9427),
+              width: 2,
+              strokeAlign: BorderSide.strokeAlignOutside,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: GridView.builder(
+            shrinkWrap: true,
+            itemCount: kRow * kColumn,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: kColumn,
+            ),
+            itemBuilder: (context, index) =>
+                Cell(image: _images[index], onTap: () => _onCellTap(index)),
+          ),
+        ),
       ),
     );
   }

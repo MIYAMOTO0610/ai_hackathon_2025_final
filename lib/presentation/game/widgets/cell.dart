@@ -12,14 +12,22 @@ class Cell extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => onTap(),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.black),
+      child: Padding(
+        padding: const EdgeInsets.all(2.0),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          width: 100,
+          height: 100,
+          child: image != null
+              ? ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.memory(image!, fit: BoxFit.cover),
+                )
+              : null,
         ),
-        width: 100,
-        height: 100,
-        child: image != null ? Image.memory(image!) : null,
       ),
     );
   }
