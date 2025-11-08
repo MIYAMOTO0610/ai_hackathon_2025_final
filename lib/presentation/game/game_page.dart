@@ -135,17 +135,28 @@ class _GamePageState extends State<GamePage> {
                 ),
               ),
             ),
-
-            GestureDetector(
-              onTap: _onGameEnd,
-              child: Image.asset(
-                _isWinning
-                    ? 'assets/images/game_page_retry.png'
-                    : 'assets/images/game_page_2.png',
-
-                width: double.infinity,
+            if (_isWinning)
+              GestureDetector(
+                onTap: _onGameEnd,
+                child: Image.asset(
+                  'assets/images/game_page_retry.png',
+                  width: double.infinity,
+                ),
+              )
+            else
+              Stack(
+                children: [
+                  Image.asset(
+                    'assets/images/game_page_bottom.png',
+                    width: double.infinity,
+                  ),
+                  Positioned(
+                    top: 40,
+                    left: 32,
+                    child: Image.asset('assets/images/kaeru.gif', width: 80),
+                  ),
+                ],
               ),
-            ),
           ],
         ),
       ),
